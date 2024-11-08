@@ -10,6 +10,7 @@ public class Login extends JFrame {
     private JButton btnPlayGame, btnExit;
     private JPanel pnName, pnlMain,buttonPanel ;
     ImagePanel imagePanel;
+    public final static int SIZE = 600;
 
 
     public Login() {
@@ -20,11 +21,12 @@ public class Login extends JFrame {
     private void init() {
         setTitle("Dots And Boxes");
         setLookAndFeel();
-        setBounds(100, 100, 600, 600);
+        setBounds(100, 100, SIZE, SIZE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setLayout(null);
+        setResizable(false);
 
         // ImagePanel
         imagePanel = new ImagePanel("src/image/img.png");
