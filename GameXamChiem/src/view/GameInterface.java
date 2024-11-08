@@ -1,13 +1,16 @@
 package view;
 
+import matrix.Matrix;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class GameInterface extends JFrame {
-    JPanel containerPanel, topPanel, centerPanel, matrixPanel, scorePanel;
+    JPanel containerPanel, topPanel, centerPanel, scorePanel;
     JButton menuBtn, settingBtn;
     JLabel playerNameLabel;
+    Matrix matrixPl ;
 
     public GameInterface(int size, int numberOfPlayer) {
         Font font_arial_24 = new Font("Arial", Font.PLAIN, 24);
@@ -30,21 +33,22 @@ public class GameInterface extends JFrame {
         playerNameLabel.setBorder(labelBorder);
         playerNameLabel.setFont(font_arial_24);
         // Matrix Panel
-        matrixPanel = new JPanel(new GridLayout(size, size));
-        matrixPanel.setOpaque(false);
-        matrixPanel.setPreferredSize(new Dimension(600, 600));
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                JRadioButton btn = new JRadioButton();
-                btn.setOpaque(false);
-                matrixPanel.add(btn);
-            }
-        }
+//        matrixPanel = new JPanel(new GridLayout(size, size));
+////        matrixPanel.setOpaque(false);
+////        matrixPanel.setPreferredSize(new Dimension(600, 600));
+////        for (int i = 0; i < size; i++) {
+////            for (int j = 0; j < size; j++) {
+////                JRadioButton btn = new JRadioButton();
+////                btn.setOpaque(false);
+////                matrixPanel.add(btn);
+////            }
+////        }
+        matrixPl = new Matrix(size,size);
         centerPanel = new JPanel(new BorderLayout());
         LineBorder centerBorder = new LineBorder(Color.RED, 5);
         centerPanel.setBorder(centerBorder);
         centerPanel.add(playerNameLabel, BorderLayout.NORTH);
-        centerPanel.add(matrixPanel);
+        centerPanel.add(matrixPl, BorderLayout.CENTER);
         centerPanel.setOpaque(false);
 
         // Score Panel
@@ -70,14 +74,11 @@ public class GameInterface extends JFrame {
 
         // Frame
         setTitle("Dots and Boxes");
-        setSize(800, 800);
+        setSize(700, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(containerPanel);
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        GameInterface frame = new GameInterface(8, 4);
-    }
 }

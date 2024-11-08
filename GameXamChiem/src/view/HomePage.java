@@ -10,7 +10,7 @@ public class HomePage extends JFrame {
     private JComboBox<String> boardSizeBox;
     private JButton btnStart;
     ImagePanel imagePanel;
-    private  JPanel optionPanel;
+    private JPanel optionPanel;
 
     public HomePage() throws HeadlessException {
         init();
@@ -52,7 +52,27 @@ public class HomePage extends JFrame {
         btnStart.setForeground(Color.WHITE);
         btnStart.setFont(new Font("Arial", Font.BOLD, 20));
         btnStart.setPreferredSize(new Dimension(150, 50));
-
+        btnStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false); // Ẩn frame hiện tại
+                int value = comboBox.getSelectedIndex();
+                switch (value) {
+                    case 0:
+                        new GameInterface(4, 1).setVisible(true);
+                        break;
+                    case 1:
+                        new GameInterface(6, 1).setVisible(true);
+                        break;
+                    case 2:
+                        new GameInterface(8, 1).setVisible(true);
+                        break;
+                    case 3:
+                        new GameInterface(10, 1).setVisible(true);
+                        break;
+                }
+            }
+        });
         optionPanel.add(lb1);
         optionPanel.add(lb2);
         optionPanel.add(comboBox);
