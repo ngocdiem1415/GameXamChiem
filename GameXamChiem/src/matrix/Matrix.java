@@ -19,15 +19,17 @@ public class Matrix extends JPanel {
 	static int offset = 50, verticalGap, horizontalGap;
 	List<Dot> dots = new ArrayList<Dot>();
 	List<Edge> edges = new ArrayList<Edge>();
-	Color connectedColor = Color.BLUE;
+	Color connectedColor = Color.RED;
 	int edgeWeight;
+	int widthScreen = GameInterface.SIZE;
+	int heightScreen = 550;
 
 	public Matrix(int row, int col) {
 		this.row = row;
 		this.col = col;
 		
-		verticalGap = (Login.SIZE - offset*2 - Dot.RADIUS * 2)/row;
-		horizontalGap = (Login.SIZE - offset*2 - Dot.RADIUS * 2)/(col-1);
+		verticalGap = (heightScreen - offset*2 - Dot.RADIUS * 2)/(row-1);
+		horizontalGap = (widthScreen - offset*2 - Dot.RADIUS * 2)/(col-1);
 
 		// Khởi tạo danh sách dots
 		for (int i = 0; i < row; i++) {

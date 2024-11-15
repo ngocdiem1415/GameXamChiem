@@ -10,7 +10,8 @@ public class GameInterface extends JFrame {
     JPanel containerPanel, topPanel, centerPanel, scorePanel;
     JButton menuBtn, settingBtn;
     JLabel playerNameLabel;
-    Matrix matrixPl ;
+    Matrix matrixPl;
+    public final static int SIZE = 700;
 
     public GameInterface(int size, int numberOfPlayer) {
         Font font_arial_24 = new Font("Arial", Font.PLAIN, 24);
@@ -74,7 +75,7 @@ public class GameInterface extends JFrame {
 
         // Frame
         setTitle("Dots and Boxes");
-        setSize(700, 700);
+        setSize(SIZE, SIZE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(containerPanel);

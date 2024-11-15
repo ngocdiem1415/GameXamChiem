@@ -9,7 +9,7 @@ import view.Login;
 public class Edge {
 	Dot start, end;
 	boolean isHorizontal;
-	Color color = Color.LIGHT_GRAY;
+	Color color = Color.GRAY;
 	int width;
 	int height;
 	final static int WEIGHT = 15;
@@ -23,7 +23,7 @@ public class Edge {
 			height = WEIGHT;
 		} else {
 			width = WEIGHT;
-			height = Matrix.verticalGap;
+			height = Matrix.verticalGap; //Matrix.verticalGap;
 		}
 	}
 

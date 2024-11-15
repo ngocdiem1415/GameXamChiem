@@ -7,7 +7,7 @@ public class DotMatrixExample extends JFrame {
 	
 	public DotMatrixExample() {
 		setTitle("Dots");
-		setSize(600, 600);
+		setSize(700, 700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setContentPane(dotPanel);
 		setVisible(true);
