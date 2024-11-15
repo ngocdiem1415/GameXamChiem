@@ -5,7 +5,7 @@ import java.awt.Point;
 
 class Dot {
 	Point point;
-	final static int RADIUS = 20;
+	final static int RADIUS = 12;
 
 	public Dot(Point p) {
 		super();
@@ -22,5 +22,17 @@ class Dot {
 	// Phương thức tạo ra một Dot trên màn hình
 	public void draw(Graphics g) {
 		g.fillOval(point.x - RADIUS, point.y - RADIUS, RADIUS * 2, RADIUS * 2);
+	}
+	
+	public int getX() {
+		return this.point.x;
+	}
+	
+	public int getY() {
+		return this.point.y;
+	}
+	
+	public boolean isDotAt(Point p) {
+		return this.point.x == p.x && this.point.y == p.y;
 	}
 }

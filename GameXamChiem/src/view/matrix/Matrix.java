@@ -11,22 +11,31 @@ import java.util.List;
 
 import javax.swing.*;
 
+import view.GameInterface;
+import view.Login;
+
 public class Matrix extends JPanel {
 	int row, col;
-	final static int GAP = 150, OFFSET = 50;
+	static int offset = 50, verticalGap, horizontalGap;
 	List<Dot> dots = new ArrayList<Dot>();
 	List<Edge> edges = new ArrayList<Edge>();
-	Color connectedColor = Color.BLUE;
+	Color connectedColor = Color.RED;
+	int edgeWeight;
+	int widthScreen = GameInterface.SIZE;
+	int heightScreen = 550;
 
 	public Matrix(int row, int col) {
 		this.row = row;
 		this.col = col;
+		
+		verticalGap = (heightScreen - offset*2 - Dot.RADIUS * 2)/(row-1);
+		horizontalGap = (widthScreen - offset*2 - Dot.RADIUS * 2)/(col-1);
 
 		// Khởi tạo danh sách dots
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				int x = OFFSET + j * GAP;
-				int y = OFFSET + i * GAP;
+				int x = offset + j * horizontalGap;
+				int y = offset + i * verticalGap;
 				dots.add(new Dot(new Point(x, y)));
 			}
 		}
@@ -36,22 +45,24 @@ public class Matrix extends JPanel {
 			for (int j = 0; j < col; j++) {
 				int dotIndex = col * i + j;
 				Dot currentDot = dots.get(dotIndex);
+				Dot endDot;
+				if (i == row - 1 && j != col - 1) {
+					endDot = dots.get(dotIndex + 1);
+					edges.add(new Edge(true, currentDot, endDot));
+					continue;
+				}
+				if (j == col - 1 && i != row - 1) {
+					endDot = dots.get(dotIndex + col);
+					edges.add(new Edge(false, currentDot, endDot));
+					continue;
+				}
 				if (i == row - 1 && j == col - 1) {
-					continue;
-				}
-				if (i == row - 1) {
-					edges.add(new Edge(true, currentDot.point));
-					continue;
-				}
-				if (j == col - 1) {
-					edges.add(new Edge(false, currentDot.point));
-					continue;
-				}
-				if (i == row - 1 && j == col - 1) {
-					continue;
+					break;
 				} else {
-					edges.add(new Edge(true, currentDot.point));
-					edges.add(new Edge(false, currentDot.point));
+					endDot = dots.get(dotIndex + 1);
+					edges.add(new Edge(true, currentDot, endDot));
+					endDot = dots.get(dotIndex + col);
+					edges.add(new Edge(false, currentDot, endDot));
 				}
 			}
 		}
