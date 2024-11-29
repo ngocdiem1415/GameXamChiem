@@ -9,6 +9,8 @@ import view.Login;
 public class Edge {
 	Dot start, end;
 	boolean isHorizontal;
+	boolean actived = false;
+	
 	Color color = Color.GRAY;
 	int width;
 	int height;

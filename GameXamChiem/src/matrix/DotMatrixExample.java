@@ -3,7 +3,7 @@ package matrix;
 import javax.swing.JFrame;
 
 public class DotMatrixExample extends JFrame {
-	Matrix dotPanel = new Matrix(4, 4);
+	Matrix dotPanel = new Matrix(2, 3);
 	
 	public DotMatrixExample() {
 		setTitle("Dots");

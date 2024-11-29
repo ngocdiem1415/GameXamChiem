@@ -27,9 +27,9 @@ public class Matrix extends JPanel {
 	public Matrix(int row, int col) {
 		this.row = row;
 		this.col = col;
-		
-		verticalGap = (heightScreen - offset*2 - Dot.RADIUS * 2)/(row-1);
-		horizontalGap = (widthScreen - offset*2 - Dot.RADIUS * 2)/(col-1);
+
+		verticalGap = (heightScreen - offset * 2 - Dot.RADIUS * 2) / (row - 1);
+		horizontalGap = (widthScreen - offset * 2 - Dot.RADIUS * 2) / (col - 1);
 
 		// Khởi tạo danh sách dots
 		for (int i = 0; i < row; i++) {
@@ -66,38 +66,36 @@ public class Matrix extends JPanel {
 				}
 			}
 		}
-		
+
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				for (Edge edge : edges) {
-					if(edge.contains(e.getPoint())) {
+					if (edge.contains(e.getPoint()) && edge.actived == false) {
 						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
+						edge.actived = true;
 						repaint();
-//						if(this.checkSquare(edge)) {
-//							
-//						}
+						checkSquare(edge);
 						break;
 					}
 				}
 			}
-
-//			private boolean checkSquare(Edge edge) {
-//				if(e.isHorizontal) {
-//					List<Edge> topNeighbours = new ArrayList<Edge>();
-//					List<Edge> bottomNeighbours = new ArrayList<Edge>();
-//					//Tìm topNeighbours
-//					for (Edge e : edges) {
-//						if() {
-//							
-//						}
-//					}
-//				} else {
-//					
-//				}
-//			}
 		});
 	}
+
+	private void checkSquare(Edge edge) {
+		if (edge.isHorizontal) {
+			for (Edge e : edges) {
+				if(e.end.point == edge.end.point && !e.isHorizontal) {
+					
+				}
+			}
+		} else {
+
+		}
+	}
+
+	// Vẽ các dots và edges lên màn hình
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -110,6 +108,6 @@ public class Matrix extends JPanel {
 		for (Dot dot : dots) {
 			dot.draw(g);
 		}
-
 	}
+
 }
