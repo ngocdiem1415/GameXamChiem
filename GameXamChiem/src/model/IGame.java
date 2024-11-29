@@ -1,4 +1,9 @@
 package model;
 
-public class IGame {
+public interface IGame {
+    public int her();
+
+    public Node[] listChill();
+
+    public boolean isOver();
 }
