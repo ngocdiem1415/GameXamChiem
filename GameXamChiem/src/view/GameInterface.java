@@ -1,5 +1,7 @@
 package view;
 
+import cotroller.IController;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -10,8 +12,10 @@ public class GameInterface extends JFrame {
     JLabel playerNameLabel;
     Matrix matrixPl;
     public final static int SIZE = 700;
+    IController control;
 
-    public GameInterface(int size, int numberOfPlayer) {
+    public GameInterface(IController control, int size, int numberOfPlayer) {
+        this.control = control;
         Font font_arial_24 = new Font("Arial", Font.PLAIN, 24);
 
         // Top Panel
@@ -42,7 +46,7 @@ public class GameInterface extends JFrame {
 ////                matrixPanel.add(btn);
 ////            }
 ////        }
-        matrixPl = new Matrix(size,size);
+        matrixPl = new Matrix(this.control,size,size);
         centerPanel = new JPanel(new BorderLayout());
         LineBorder centerBorder = new LineBorder(Color.RED, 5);
         centerPanel.setBorder(centerBorder);

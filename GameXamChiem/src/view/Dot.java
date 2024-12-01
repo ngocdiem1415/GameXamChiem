@@ -3,7 +3,7 @@ package view;
 import java.awt.Graphics;
 import java.awt.Point;
 
-class Dot {
+public class Dot {
 	Point point;
 	final static int RADIUS = 12;
 

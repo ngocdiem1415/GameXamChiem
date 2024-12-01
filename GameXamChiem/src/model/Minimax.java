@@ -1,28 +1,35 @@
 package model;
 
-import java.util.List;
-
 public class Minimax {
-    public int minimax(boolean minimax, Node state, int depth){
-        depth = 2;
+    AIPlayer ai;
+    HumanPlayer human;
+
+    public Minimax() {
+    }
+
+    public int minimax(boolean isMaximizing, Node state, int depth){
         if((depth == 0 ) || state.isOver()){
-            return state.her();
+            return her(state);
         }
-        if (minimax){
+        if (isMaximizing){
             int maxher = Integer.MIN_VALUE;
-            for (Node child: state.listChill()) {
+            for (Node child: state.listChild()) {
                 int her = minimax(false, child, depth-1);
                 maxher = Math.max(her, maxher);
             }
             return maxher;
         }else{
             int minHer = Integer.MAX_VALUE;
-            for (Node child: state.listChill()) {
+            for (Node child: state.listChild()) {
                 int her = minimax(true, child, depth-1);
                 minHer = Math.min(her, minHer);
             }
             return minHer;
         }
+    }
+
+    private int her(Node state) {
+        return 0;
     }
 
     public static void main(String[] args) {
