@@ -8,12 +8,14 @@ import java.util.List;
 
 public class Node implements IGame {
     List<Edge> state;
+    int heuristicState;
 
     public Node() {
     }
 
     public Node(List<Edge> state) {
         this.state = state;
+        this.heuristicState =0;
     }
 
     public List<Node> listChild() {
@@ -51,7 +53,23 @@ public class Node implements IGame {
         System.out.println(state.toString());
     }
 
-//    public static void main(String[] args) {
+    public int getHeuristicState() {
+        return heuristicState;
+    }
+
+    public void setHeuristicState(int heuristicState) {
+        this.heuristicState = heuristicState;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "state=" + state +
+                ", heuristicState=" + heuristicState +
+                '}';
+    }
+
+    //    public static void main(String[] args) {
 //        List<Edge> list = new ArrayList<>();
 //        for (int i = 0; i < 5; i++) {
 //            list.add(new Edge());
