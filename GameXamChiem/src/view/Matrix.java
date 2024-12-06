@@ -1,5 +1,7 @@
 package view;
 
+import cotroller.IController;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -21,10 +23,12 @@ public class Matrix extends JPanel {
 	int edgeWeight;
 	int widthScreen = GameInterface.SIZE;
 	int heightScreen = 550;
+	IController control;
 
-	public Matrix(int row, int col) {
+	public Matrix(IController control, int row, int col) {
 		this.row = row;
 		this.col = col;
+		this.control = control;
 
 		verticalGap = (heightScreen - offset * 2 - Dot.RADIUS * 2) / (row - 1);
 		horizontalGap = (widthScreen - offset * 2 - Dot.RADIUS * 2) / (col - 1);
@@ -72,6 +76,7 @@ public class Matrix extends JPanel {
 					if (edge.contains(e.getPoint()) && edge.actived == false) {
 						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
 						edge.actived = true;
+						control.currentState(edges);
 						repaint();
 						checkSquare(edge);
 						break;
