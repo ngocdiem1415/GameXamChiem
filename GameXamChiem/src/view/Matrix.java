@@ -2,7 +2,6 @@ package view;
 
 import cotroller.IController;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -26,6 +25,8 @@ public class Matrix extends JPanel {
 	IController control;
 
 	public Matrix(IController control, int row, int col) {
+		row += 1;
+		col += 1;
 		this.row = row;
 		this.col = col;
 		this.control = control;
@@ -244,9 +245,5 @@ public class Matrix extends JPanel {
 		for (Dot dot : dots) {
 			dot.draw(g);
 		}
-	}
-
-	public static void main(String[] args) {
-		DotMatrixExample frame = new DotMatrixExample();
 	}
 }

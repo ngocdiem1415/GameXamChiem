@@ -35,17 +35,6 @@ public class GameInterface extends JFrame {
         LineBorder labelBorder = new LineBorder(Color.ORANGE, 5);
         playerNameLabel.setBorder(labelBorder);
         playerNameLabel.setFont(font_arial_24);
-        // Matrix Panel
-//        matrixPanel = new JPanel(new GridLayout(size, size));
-////        matrixPanel.setOpaque(false);
-////        matrixPanel.setPreferredSize(new Dimension(600, 600));
-////        for (int i = 0; i < size; i++) {
-////            for (int j = 0; j < size; j++) {
-////                JRadioButton btn = new JRadioButton();
-////                btn.setOpaque(false);
-////                matrixPanel.add(btn);
-////            }
-////        }
         matrixPl = new Matrix(this.control,size,size);
         centerPanel = new JPanel(new BorderLayout());
         LineBorder centerBorder = new LineBorder(Color.RED, 5);
