@@ -1,5 +1,7 @@
 package view;
 
+import cotroller.IController;
+
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
@@ -11,10 +13,11 @@ public class HomePage extends JFrame {
     private JButton btnStart;
     ImagePanel imagePanel;
     private JPanel optionPanel;
+    IController control;
 
-    public HomePage() throws HeadlessException {
+    public HomePage(IController control) throws HeadlessException {
+        this.control = control;
         init();
-        visible();
     }
 
     private void init() {
@@ -59,16 +62,16 @@ public class HomePage extends JFrame {
                 int value = comboBox.getSelectedIndex();
                 switch (value) {
                     case 0:
-                        new GameInterface(4, 1).setVisible(true);
+                        new GameInterface(control, 4, 1).setVisible(true);
                         break;
                     case 1:
-                        new GameInterface(6, 1).setVisible(true);
+                        new GameInterface(control, 6, 1).setVisible(true);
                         break;
                     case 2:
-                        new GameInterface(8, 1).setVisible(true);
+                        new GameInterface(control, 8, 1).setVisible(true);
                         break;
                     case 3:
-                        new GameInterface(10, 1).setVisible(true);
+                        new GameInterface(control, 10, 1).setVisible(true);
                         break;
                 }
             }
@@ -100,10 +103,5 @@ public class HomePage extends JFrame {
             throw new RuntimeException(e);
         }
     }
-
-    public void visible() {
-        this.setVisible(true);
-    }
-
 
 }

@@ -1,5 +1,7 @@
 package view;
 
+import cotroller.IController;
+
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
@@ -11,11 +13,11 @@ public class Login extends JFrame {
     private JPanel pnName, pnlMain,buttonPanel ;
     ImagePanel imagePanel;
     public final static int SIZE = 600;
+    IController control;
 
-
-    public Login() {
+    public Login(IController control) {
+        this.control = control;
         init();
-        visible();
     }
 
     private void init() {
@@ -43,7 +45,7 @@ public class Login extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false); // Ẩn frame hiện tại
-                new HomePage().setVisible(true);
+                new HomePage(control).setVisible(true);
 
             }
         });
@@ -101,11 +103,4 @@ public class Login extends JFrame {
         }
     }
 
-    public void visible() {
-        this.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        Login login = new Login();
-    }
 }

@@ -14,6 +14,19 @@ public class Edge {
 	int height;
 	final static int WEIGHT = 15;
 
+	public Edge() {
+	}
+
+	public Edge(Edge edge) {
+		this.start = edge.start;
+		this.end = edge.end;
+		this.isHorizontal = edge.isHorizontal;
+		this.actived = edge.actived;
+		this.color = new Color(edge.color.getRGB(), true);;
+		this.width = edge.width;
+		this.height = edge.height;
+	}
+
 	public Edge(boolean isHorizontal, Dot start, Dot end) {
 		this.start = start;
 		this.end = end;
@@ -59,5 +72,35 @@ public class Edge {
 
 	public void drawVertical(Graphics g) {
 		g.fillRect(start.getX() - width / 2, start.getY(), width, height);
+	}
+
+	public boolean isActived() {
+		return actived;
+	}
+
+	public void setActived(boolean actived) {
+		this.actived = actived;
+	}
+
+	public Dot getStart() {
+		return start;
+	}
+
+	public void setStart(Dot start) {
+		this.start = start;
+	}
+
+	public Dot getEnd() {
+		return end;
+	}
+
+	public void setEnd(Dot end) {
+		this.end = end;
+	}
+
+	@Override
+	public String toString() {
+		return "Edge{" +
+				"actived=" + actived;
 	}
 }
