@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class Login extends JFrame {
     private JButton btnPlayGame, btnExit;
-    private JPanel pnName, pnlMain,buttonPanel ;
+    private JPanel buttonPanel ;
     ImagePanel imagePanel;
     public final static int SIZE = 600;
     IController control;
