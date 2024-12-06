@@ -1,46 +1,83 @@
 package model;
 
-public class Minimax {
+import view.Edge;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+
+public class Minimax extends Observable {
     AIPlayer ai;
     HumanPlayer human;
+    Node bestMove;
 
-    public Minimax() {
+    public Minimax(AIPlayer ai, HumanPlayer human) {
+        this.ai = ai;
+        this.human = human;
+        this.bestMove = new Node();
     }
 
-    public int minimax(boolean isMaximizing, Node state, int depth){
+    public Node minimax(boolean isMaximizing, Node state, int depth){
+        List<Node> listState = state.listChild();
         if((depth == 0 ) || state.isOver()){
-            return her(state);
+            state.setHeuristicState(her(state));
+            return state;
         }
         if (isMaximizing){
-            int maxher = Integer.MIN_VALUE;
-            for (Node child: state.listChild()) {
-                int her = minimax(false, child, depth-1);
-                maxher = Math.max(her, maxher);
+            int maxHer = Integer.MIN_VALUE;
+            for (Node child: listState) {
+                Node evaluatedNode = minimax(false, child, depth-1);
+                int her = evaluatedNode.getHeuristicState();
+
+                // Cập nhật Node tốt nhất
+                if (her > maxHer) {
+                    maxHer = her;
+                    bestMove = child;
+                }
             }
-            return maxher;
+            return bestMove;
         }else{
             int minHer = Integer.MAX_VALUE;
-            for (Node child: state.listChild()) {
-                int her = minimax(true, child, depth-1);
-                minHer = Math.min(her, minHer);
+            for (Node child: listState) {
+                Node evaluatedNode = minimax(true, child, depth-1);
+                int her = evaluatedNode.getHeuristicState();
+
+                if (her < minHer) {
+                    minHer = her;
+                    bestMove = child; // Lưu Node con tốt nhất
+                }
             }
-            return minHer;
+            return bestMove;
         }
     }
 
     private int her(Node state) {
-        return 0;
+        return Math.abs(ai.getScore() - human.getScore());
     }
 
     public static void main(String[] args) {
-        Minimax minimax = new Minimax();
+        AIPlayer ai = new AIPlayer();
+        ai.setScore(2);
+        HumanPlayer human = new HumanPlayer();
+        human.setScore(5);
+        Minimax minimax = new Minimax(ai, human);
+
         Node currentState = new Node(); // Khởi tạo trạng thái ban đầu
+        List<Edge> edgeList = new ArrayList<>();
+        for (int i=0; i < 10; i++ ) {
+            edgeList.add(new Edge());
+        }
+        edgeList.get(1).setActived(true);
+        edgeList.get(4).setActived(true);
+        edgeList.get(2).setActived(true);
+        edgeList.get(8).setActived(true);
+        currentState.setState(edgeList);
 
         int depth = 3; // Độ sâu tìm kiếm
         boolean isMaximizing = true; // Người chơi đầu tiên là Maximizing player
 
-        int result = minimax.minimax( isMaximizing, currentState, depth);
-        System.out.println("Best evaluation score: " + result);
+        Node result = minimax.minimax( isMaximizing, currentState, depth);
+        System.out.println("Best evaluation score: " + result.toString());
     }
 
 }
