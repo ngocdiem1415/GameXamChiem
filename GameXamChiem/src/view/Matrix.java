@@ -76,9 +76,9 @@ public class Matrix extends JPanel {
 					if (edge.contains(e.getPoint()) && edge.actived == false) {
 						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
 						edge.actived = true;
-						control.currentState(edges);
 						repaint();
 						checkSquare(edge);
+						control.currentState(edges);
 						break;
 					}
 				}
