@@ -2,7 +2,6 @@ package view;
 
 import cotroller.IController;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -27,6 +26,8 @@ public class Matrix extends JPanel {
 	List<Edge> newListEdge = new ArrayList<>();
 
 	public Matrix(IController control, int row, int col) {
+		row += 1;
+		col += 1;
 		this.row = row;
 		this.col = col;
 		this.control = control;
