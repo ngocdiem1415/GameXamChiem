@@ -24,6 +24,7 @@ public class Matrix extends JPanel {
 	int widthScreen = GameInterface.SIZE;
 	int heightScreen = 550;
 	IController control;
+	List<Edge> newListEdge = new ArrayList<>();
 
 	public Matrix(IController control, int row, int col) {
 		this.row = row;
@@ -78,7 +79,8 @@ public class Matrix extends JPanel {
 						edge.actived = true;
 						repaint();
 						checkSquare(edge);
-						control.currentState(edges);
+						newListEdge = control.sendCurrentState(edges);
+						System.out.println(newListEdge.toString());
 						break;
 					}
 				}
@@ -244,9 +246,5 @@ public class Matrix extends JPanel {
 		for (Dot dot : dots) {
 			dot.draw(g);
 		}
-	}
-
-	public static void main(String[] args) {
-		DotMatrixExample frame = new DotMatrixExample();
 	}
 }

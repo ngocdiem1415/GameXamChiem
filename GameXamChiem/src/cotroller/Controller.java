@@ -17,7 +17,7 @@ public class Controller implements IController{
     }
 
     @Override
-    public void currentState(List<Edge> edges) {
-        model.setState(edges);
+    public List<Edge> sendCurrentState(List<Edge> edges) {
+        return model.makeMove(edges);
     }
 }

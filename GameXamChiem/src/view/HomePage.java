@@ -12,8 +12,10 @@ public class HomePage extends JFrame {
     private JComboBox<String> boardSizeBox;
     private JButton btnStart;
     ImagePanel imagePanel;
-    private JPanel optionPanel;
+    private JPanel titlePN, optionPanel;
     IController control;
+    JLabel nameLb, lb1;
+    JTextField nameTF;
 
     public HomePage(IController control) throws HeadlessException {
         this.control = control;
@@ -27,19 +29,32 @@ public class HomePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new FlowLayout());
 
         // ImagePanel
         imagePanel = new ImagePanel("src/image/background.png");
         imagePanel.setLayout(new BorderLayout());
         setContentPane(imagePanel);
 
+        titlePN = new JPanel();
+        lb1 = new JLabel("OPTIONS");
+        lb1.setFont(new Font("Arial", Font.BOLD, 25));
+        titlePN.add(lb1);
+
+        nameLb = new JLabel("Tên người chơi: ");
+        nameLb.setFont(new Font("Arial", Font.BOLD, 20));
+        nameLb.setBounds(50, 232, 409, 44);
+
+        nameTF = new JTextField();
+        nameTF.setFont(new Font("Arial", Font.BOLD, 20));
+        nameTF.setHorizontalAlignment(SwingConstants.LEFT);
+        nameTF.setColumns(8);
+        nameTF.setBounds(170, 232, 409, 44);
+
         optionPanel = new JPanel();
         optionPanel.setLayout(new GridLayout(4, 1, 10, 10));
         optionPanel.setOpaque(false);
 
-        JLabel lb1 = new JLabel("OPTIONS");
-        lb1.setFont(new Font("Arial", Font.BOLD, 25));
         // Tạo JComboBox với các lựa chọn
         JLabel lb2 = new JLabel("Board Size");
         lb2.setFont(new Font("Arial", Font.BOLD, 20));
@@ -76,10 +91,13 @@ public class HomePage extends JFrame {
                 }
             }
         });
-        optionPanel.add(lb1);
+        optionPanel.add(titlePN);
+        optionPanel.add(nameLb);
+        optionPanel.add(nameTF);
         optionPanel.add(lb2);
         optionPanel.add(comboBox);
         optionPanel.add(btnStart);
+
 
         // Tạo panel để căn giữa optionPanel
         JPanel centerPanel = new JPanel(new GridBagLayout());

@@ -2,11 +2,15 @@ package run;
 
 import cotroller.Controller;
 import cotroller.IController;
-import model.Node;
-import view.Login;
+import model.AI;
+import model.AIPlayer;
+import model.HumanPlayer;
+
 
 public class Test {
     public static void main(String[] args) {
-        IController control = new Controller(new Node());
+        AIPlayer ai = new AIPlayer();
+        HumanPlayer human = new HumanPlayer();
+        IController control = new Controller(new AI(ai, human));
     }
 }

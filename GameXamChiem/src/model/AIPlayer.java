@@ -2,7 +2,7 @@ package model;
 
 import javax.swing.*;
 
-public class AIPlayer implements IPlayer{
+public class AIPlayer implements User{
     public static final int TOKEN = 0;
     private int score;
     private int depth; //độ sâu của thuật toán minimax
@@ -15,11 +15,6 @@ public class AIPlayer implements IPlayer{
     public AIPlayer(int depth){
         this.score =0;
         this.depth = depth;
-    }
-
-    @Override
-    public void claimBox(Box box) {
-
     }
 
     @Override
