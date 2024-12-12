@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class HomePage extends JFrame {
-    private JComboBox<String> boardSizeBox;
     private JButton btnStart;
     ImagePanel imagePanel;
     private JPanel optionPanel;
@@ -49,7 +48,6 @@ public class HomePage extends JFrame {
         comboBox.setForeground(Color.BLUE);
 
 //        // Start Button
-        JPanel startPanel = new JPanel(new FlowLayout());
         btnStart = new JButton("Start");
         btnStart.setBackground(new Color(34, 177, 76)); // Màu xanh lá
         btnStart.setForeground(Color.WHITE);
