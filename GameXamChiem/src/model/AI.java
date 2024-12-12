@@ -4,16 +4,16 @@ import view.Edge;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class AI implements IGame{
+public class AI extends Observable implements IGame {
     AIPlayer ai;
     HumanPlayer human;
     Node bestState;
 
 
-    public AI(AIPlayer ai, HumanPlayer human) {
-        this.ai = ai;
-        this.human = human;
+    public AI() {
         this.bestState = new Node();
     }
 
@@ -21,20 +21,43 @@ public class AI implements IGame{
     public List<Edge> makeMove(List<Edge> state) {
         Node startState = new Node();
         startState.setState(state);
-        Node bestState = minimax(true, startState, 3);
+        Node bestState = minimax(true, startState, 3,Integer.MIN_VALUE, Integer.MAX_VALUE);
+        System.out.println(bestState.getState());
         return bestState.getState();
     }
 
-    public Node minimax(boolean isMaximizing, Node state, int depth){
+    @Override
+    public void setDepth(int level) {
+        ai.setDepth(level);
+    }
+
+    @Override
+    public void createPlayer(int level) {
+        this.ai = new AIPlayer();
+        this.human = new HumanPlayer();
+        setDepth(level);
+    }
+
+    @Override
+    public int getAIScore() {
+        return ai.getScore();
+    }
+
+    @Override
+    public int getUserScore() {
+        return human.getScore();
+    }
+
+    public Node minimax(boolean isMaximizing, Node state, int depth, int alpha, int beta) {
         List<Node> listState = state.listChild();
-        if((depth == 0 ) || state.isOver()){
+        if ((depth == 0) || state.isOver()) {
             state.setHeuristicState(her(state));
             return state;
         }
-        if (isMaximizing){
+        if (isMaximizing) {
             int maxHer = Integer.MIN_VALUE;
-            for (Node child: listState) {
-                Node evaluatedNode = minimax(false, child, depth-1);
+            for (Node child : listState) {
+                Node evaluatedNode = minimax(false, child, depth - 1, alpha, beta);
                 int her = evaluatedNode.getHeuristicState();
 
                 // Cập nhật Node tốt nhất
@@ -42,19 +65,33 @@ public class AI implements IGame{
                     maxHer = her;
                     bestState = child;
                 }
+                // Cập nhật alpha
+                alpha = Math.max(alpha, her);
+                // Cắt tỉa
+                if (beta <= alpha) {
+                    break;
+                }
             }
+            bestState.setHeuristicState(maxHer);
             return bestState;
-        }else{
+        } else {
             int minHer = Integer.MAX_VALUE;
-            for (Node child: listState) {
-                Node evaluatedNode = minimax(true, child, depth-1);
+            for (Node child : listState) {
+                Node evaluatedNode = minimax(true, child, depth - 1, alpha, beta);
                 int her = evaluatedNode.getHeuristicState();
 
                 if (her < minHer) {
                     minHer = her;
                     bestState = child; // Lưu Node con tốt nhất
                 }
+                // Cập nhật beta
+                beta = Math.min(beta, her);
+                // Cắt tỉa
+                if (beta <= alpha) {
+                    break;
+                }
             }
+            bestState.setHeuristicState(minHer);
             return bestState;
         }
     }
@@ -69,7 +106,7 @@ public class AI implements IGame{
 
         Node currentState = new Node(); // Khởi tạo trạng thái ban đầu
         List<Edge> edgeList = new ArrayList<>();
-        for (int i=0; i < 10; i++ ) {
+        for (int i = 0; i < 10; i++) {
             edgeList.add(new Edge());
         }
         edgeList.get(1).setActived(true);

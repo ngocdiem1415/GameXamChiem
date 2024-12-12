@@ -6,7 +6,7 @@ import view.Edge;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Node {
+public class Node{
     List<Edge> state;
     int heuristicState;
 

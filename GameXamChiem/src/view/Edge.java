@@ -101,6 +101,6 @@ public class Edge {
 	@Override
 	public String toString() {
 		return "Edge{" +
-				"actived=" + actived;
+				"actived=" + actived + "}";
 	}
 }

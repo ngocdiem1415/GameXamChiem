@@ -9,11 +9,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.*;
 
-public class Matrix extends JPanel {
+public class Matrix extends JPanel implements Observer {
 	int row, col;
+	private Observable obs;
 	static int offset = 50, verticalGap, horizontalGap;
 	List<Dot> dots = new ArrayList<Dot>();
 	List<Edge> edges = new ArrayList<Edge>();
@@ -24,14 +27,17 @@ public class Matrix extends JPanel {
 	int heightScreen = 550;
 	IController control;
 	List<Edge> newListEdge = new ArrayList<>();
+	GameInterface gameinterface;
 
-	public Matrix(IController control, int row, int col) {
+	public Matrix(Observable obs,IController control, int row, int col, GameInterface gameInterface) {
 		row += 1;
 		col += 1;
 		this.row = row;
 		this.col = col;
+		this.obs = obs;
+		obs.addObserver(this);
 		this.control = control;
-
+		this.gameinterface = gameInterface;
 		verticalGap = (heightScreen - offset * 2 - Dot.RADIUS * 2) / (row - 1);
 		horizontalGap = (widthScreen - offset * 2 - Dot.RADIUS * 2) / (col - 1);
 
@@ -79,9 +85,10 @@ public class Matrix extends JPanel {
 						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
 						edge.actived = true;
 						repaint();
+						gameinterface.setNamePlayer();
 						checkSquare(edge);
 						newListEdge = control.sendCurrentState(edges);
-						System.out.println(newListEdge.toString());
+//						System.out.println(newListEdge.toString());
 						break;
 					}
 				}
@@ -247,5 +254,10 @@ public class Matrix extends JPanel {
 		for (Dot dot : dots) {
 			dot.draw(g);
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+
 	}
 }
