@@ -8,7 +8,7 @@ public class Edge {
 	Dot start, end;
 	boolean isHorizontal;
 	boolean actived = false;
-	
+	Color connectedColor = Color.BLACK;
 	Color color = Color.GRAY;
 	int width;
 	int height;

@@ -1,16 +1,18 @@
 package view;
 
 import cotroller.IController;
+import model.AI;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.Observable;
+import java.util.Observer;
 
-public class GameInterface extends JFrame {
+public class GameInterface extends JFrame  implements Observer{
     JPanel containerPanel, topPanel, centerPanel, scorePanel;
     JButton menuBtn, settingBtn;
-    JLabel playerNameLabel;
+    JLabel playerNameLabel,AIScoreLabel,UserScoreLabel;
     Matrix matrixPl;
     public final static int SIZE = 700;
     IController control;
@@ -19,8 +21,10 @@ public class GameInterface extends JFrame {
     int level;
     private Observable obs;
 
+
     public GameInterface(Observable obs,IController control, String nameUser, int size,int level, int numberOfPlayer) {
         this.obs = obs;
+        obs.addObserver(this);
         this.control = control;
         this.nameUser = nameUser;
         this.sizeboard = size;
@@ -44,7 +48,7 @@ public class GameInterface extends JFrame {
         LineBorder labelBorder = new LineBorder(Color.ORANGE, 5);
         playerNameLabel.setBorder(labelBorder);
         playerNameLabel.setFont(font_arial_24);
-        matrixPl = new Matrix(obs,this.control,size,size, this);
+        matrixPl = new Matrix(obs, this.control,size,size, this);
         centerPanel = new JPanel(new BorderLayout());
         LineBorder centerBorder = new LineBorder(Color.RED, 5);
         centerPanel.setBorder(centerBorder);
@@ -63,9 +67,9 @@ public class GameInterface extends JFrame {
 //        }
         int aiScore = control.getAIScore();
         int userScore = control.getHumanScore();
-        JLabel AIScoreLabel = new JLabel(aiScore + " :AI");
+        AIScoreLabel = new JLabel(aiScore + " :AI");
         AIScoreLabel.setFont(font_arial_24);
-        JLabel UserScoreLabel = new JLabel(nameUser + ": " + userScore);
+        UserScoreLabel = new JLabel(nameUser + ": " + userScore);
         UserScoreLabel.setFont(font_arial_24);
         scorePanel.add(AIScoreLabel, BorderLayout.EAST);
         scorePanel.add(UserScoreLabel, BorderLayout.WEST);
@@ -93,7 +97,22 @@ public class GameInterface extends JFrame {
     }
 
     public void setNamePlayer() {
-        playerNameLabel.setName("AI's Player ");
+        if ("AI's Player".equalsIgnoreCase(playerNameLabel.getText())){
+            playerNameLabel.setName( nameUser+ "'s Player ");
+        }else{
+            playerNameLabel.setName("AI's Player");
+        }
         System.out.println("Da doi lai ten");
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        AI model =(AI) o;
+        setNamePlayer();
+        AIScoreLabel.setText(model.getAIScore()+" :AI");
+        UserScoreLabel.setText(nameUser + ": " + model.getAIScore());
+        System.out.println("AI---" + AIScoreLabel.getText());
+        System.out.println("human---" + UserScoreLabel.getText());
+
     }
 }

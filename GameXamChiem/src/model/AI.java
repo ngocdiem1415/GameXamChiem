@@ -21,8 +21,18 @@ public class AI extends Observable implements IGame {
     public List<Edge> makeMove(List<Edge> state) {
         Node startState = new Node();
         startState.setState(state);
-        Node bestState = minimax(true, startState, 3,Integer.MIN_VALUE, Integer.MAX_VALUE);
-        System.out.println(bestState.getState());
+        bestState = minimax(true, startState, 3,Integer.MIN_VALUE, Integer.MAX_VALUE);
+//        System.out.println(bestState.getState()+"--------------");
+
+        synchronized (this) {
+            setChanged();
+            notifyObservers();
+        }
+
+        return bestState.getState();
+    }
+
+    public List<Edge> getBestState(){
         return bestState.getState();
     }
 

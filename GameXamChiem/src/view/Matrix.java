@@ -1,6 +1,7 @@
 package view;
 
 import cotroller.IController;
+import model.AI;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,9 +15,8 @@ import java.util.Observer;
 
 import javax.swing.*;
 
-public class Matrix extends JPanel implements Observer {
+public class Matrix extends JPanel implements Observer{
 	int row, col;
-	private Observable obs;
 	static int offset = 50, verticalGap, horizontalGap;
 	List<Dot> dots = new ArrayList<Dot>();
 	List<Edge> edges = new ArrayList<Edge>();
@@ -28,13 +28,14 @@ public class Matrix extends JPanel implements Observer {
 	IController control;
 	List<Edge> newListEdge = new ArrayList<>();
 	GameInterface gameinterface;
+	private Observable obs;
 
-	public Matrix(Observable obs,IController control, int row, int col, GameInterface gameInterface) {
+	public Matrix(Observable obs ,IController control, int row, int col, GameInterface gameInterface) {
 		row += 1;
 		col += 1;
 		this.row = row;
 		this.col = col;
-		this.obs = obs;
+		this.obs =obs;
 		obs.addObserver(this);
 		this.control = control;
 		this.gameinterface = gameInterface;
@@ -85,15 +86,20 @@ public class Matrix extends JPanel implements Observer {
 						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
 						edge.actived = true;
 						repaint();
-						gameinterface.setNamePlayer();
 						checkSquare(edge);
-						newListEdge = control.sendCurrentState(edges);
-//						System.out.println(newListEdge.toString());
+						makeMoveAI();
 						break;
 					}
 				}
 			}
 		});
+	}
+
+	private void makeMoveAI() {
+		gameinterface.setNamePlayer();
+		System.out.println(edges.toString() + " nguoi choi");
+		newListEdge = control.sendCurrentState(edges);
+
 	}
 
 	private void checkSquare(Edge edge) {
@@ -246,8 +252,13 @@ public class Matrix extends JPanel implements Observer {
 			g.fillRect(square.dot.getX(), square.dot.getY(), square.width, square.height);
 		}
 		for (Edge edge : edges) {
-			g.setColor(edge.color);
-			edge.draw(g);
+			if ( !edge.actived) {
+				g.setColor(edge.color);
+				edge.draw(g);
+			}else{
+				g.setColor(edge.connectedColor);
+				edge.draw(g);
+			}
 		}
 
 		g.setColor(Color.BLACK);
@@ -258,6 +269,9 @@ public class Matrix extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-
+		AI model = (AI) o;
+		this.edges = model.getBestState();
+		System.out.println(edges + "------------may choi");
+		repaint();
 	}
 }

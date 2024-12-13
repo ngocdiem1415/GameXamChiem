@@ -50,7 +50,7 @@ public class Node{
 
     public void setState(List<Edge> state) {
         this.state = state;
-        System.out.println(state.toString());
+//        System.out.println(state.toString());
     }
 
     public int getHeuristicState() {
