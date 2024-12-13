@@ -2,10 +2,10 @@ package run;
 
 import cotroller.Controller;
 import cotroller.IController;
-import model.Node;
+import model.*;
 
 public class Test {
     public static void main(String[] args) {
-        IController control = new Controller(new Node());
+        IController control = new Controller(new AI());
     }
 }

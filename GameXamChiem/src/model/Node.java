@@ -6,7 +6,7 @@ import view.Edge;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Node implements IGame {
+public class Node{
     List<Edge> state;
     int heuristicState;
 
@@ -50,7 +50,7 @@ public class Node implements IGame {
 
     public void setState(List<Edge> state) {
         this.state = state;
-        System.out.println(state.toString());
+//        System.out.println(state.toString());
     }
 
     public int getHeuristicState() {

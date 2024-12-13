@@ -5,5 +5,13 @@ import view.Edge;
 import java.util.List;
 
 public interface IController {
-    void currentState(List<Edge> edges);
+    List<Edge> sendCurrentState(List<Edge> edges);
+
+    void setDepth(int level);
+
+    void createPlayer(int level);
+
+    int getAIScore();
+
+    int getHumanScore();
 }
