@@ -90,8 +90,7 @@ public class Matrix extends JPanel {
 	private void checkSquare(Edge edge) {
 		Dot start = edge.start;
 		Dot end = edge.end;
-		// Nếu là cạnh ngang
-		if (edge.isHorizontal) {
+ 		if (edge.isHorizontal) {
 			// Xét ô vuông bên trên
 			Dot topStart = findDotByPoint(new Point(edge.start.getX(), edge.start.getY() - verticalGap));
 			if (topStart != null) {
