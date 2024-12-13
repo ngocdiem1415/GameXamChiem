@@ -5,5 +5,13 @@ import view.Edge;
 import java.util.List;
 
 public interface IGame {
-    public void setState(List<Edge> state);
+   List<Edge> makeMove(List<Edge> state);
+
+   void setDepth(int level);
+
+   void createPlayer(int level);
+
+   int getAIScore();
+
+   int getUserScore();
 }

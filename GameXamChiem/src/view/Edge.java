@@ -8,7 +8,7 @@ public class Edge {
 	Dot start, end;
 	boolean isHorizontal;
 	boolean actived = false;
-	
+	Color connectedColor = Color.BLACK;
 	Color color = Color.GRAY;
 	int width;
 	int height;
@@ -101,6 +101,6 @@ public class Edge {
 	@Override
 	public String toString() {
 		return "Edge{" +
-				"actived=" + actived;
+				"actived=" + actived + "}";
 	}
 }

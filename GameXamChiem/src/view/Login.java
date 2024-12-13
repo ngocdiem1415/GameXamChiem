@@ -7,6 +7,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
 
 public class Login extends JFrame {
     private JButton btnPlayGame, btnExit;
@@ -14,8 +15,10 @@ public class Login extends JFrame {
     ImagePanel imagePanel;
     public final static int SIZE = 600;
     IController control;
+    private Observable obs;
 
-    public Login(IController control) {
+    public Login(Observable obs,IController control) {
+        this.obs = obs;
         this.control = control;
         init();
     }
@@ -45,7 +48,7 @@ public class Login extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false); // Ẩn frame hiện tại
-                new HomePage(control).setVisible(true);
+                new HomePage(obs, control).setVisible(true);
 
             }
         });
