@@ -1,26 +1,28 @@
 package view;
 
-import cotroller.IController;
-
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
+//import java.util.Observable;
 
-public class Login extends JFrame {
+public class LoginView extends JFrame {
     private JButton btnPlayGame, btnExit;
-    private JPanel buttonPanel ;
+	private JPanel buttonPanel ;
     ImagePanel imagePanel;
     public final static int SIZE = 600;
-    IController control;
-    private Observable obs;
+//    IController control;
+//    private Observable obs;
 
-    public Login(Observable obs,IController control) {
-        this.obs = obs;
-        this.control = control;
-        init();
+//    public Login(Observable obs,IController control) {
+//        this.obs = obs;
+//        this.control = control;
+//        init();
+//    }
+    
+    public LoginView() {
+    	init();
     }
 
     private void init() {
@@ -44,14 +46,6 @@ public class Login extends JFrame {
         buttonPanel.setOpaque(false);
 
         btnPlayGame = createStyledButton("PLAY GAME", Color.GREEN, Color.WHITE);
-        btnPlayGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false); // Ẩn frame hiện tại
-                new HomePage(obs, control).setVisible(true);
-
-            }
-        });
 
         btnExit = createStyledButton("EXIT", Color.RED, Color.WHITE);
         btnExit.addActionListener(new ActionListener() {
@@ -105,5 +99,9 @@ public class Login extends JFrame {
             throw new RuntimeException(e);
         }
     }
+    
+    public JButton getBtnPlayGame() {
+		return btnPlayGame;
+	}
 
 }

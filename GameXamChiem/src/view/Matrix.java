@@ -1,210 +1,51 @@
 package view;
 
-import cotroller.IController;
-import model.AI;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.*;
 
-public class Matrix extends JPanel implements Observer{
-	int row, col;
-	static int offset = 50, verticalGap, horizontalGap;
+import model.Dot;
+import model.Edge;
+import model.MainModel;
+import model.Square;
+
+public class Matrix extends JPanel {
+	int size;
+	int offset = 50, verticalGap, horizontalGap;
 	List<Dot> dots = new ArrayList<Dot>();
-	List<Edge> edges = new ArrayList<Edge>();
+	List<Edge> edges = new LinkedList<Edge>();
 	List<Square> squares = new ArrayList<Square>();
-	Color connectedColor = Color.BLACK;
 	int edgeWeight;
-	int widthScreen = GameInterface.SIZE;
+	int widthScreen = GameView.SIZE;
 	int heightScreen = 550;
-	IController control;
 	List<Edge> newListEdge = new ArrayList<>();
-	GameInterface gameinterface;
-	private Observable obs;
+	GameView gameinterface;
 
-	public Matrix(Observable obs ,IController control, int row, int col, GameInterface gameInterface) {
-		row += 1;
-		col += 1;
-		this.row = row;
-		this.col = col;
-		this.obs =obs;
-		obs.addObserver(this);
-		this.control = control;
-		this.gameinterface = gameInterface;
-		verticalGap = (heightScreen - offset * 2 - Dot.RADIUS * 2) / (row - 1);
-		horizontalGap = (widthScreen - offset * 2 - Dot.RADIUS * 2) / (col - 1);
-
-		// Khởi tạo danh sách dots
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				int x = offset + j * horizontalGap;
-				int y = offset + i * verticalGap;
-				dots.add(new Dot(new Point(x, y)));
-			}
-		}
-
-		// Khởi tạo danh sách edges
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				int dotIndex = col * i + j;
-				Dot currentDot = dots.get(dotIndex);
-				Dot endDot;
-				if (i == row - 1 && j != col - 1) {
-					endDot = dots.get(dotIndex + 1);
-					edges.add(new Edge(true, currentDot, endDot));
-					continue;
-				}
-				if (j == col - 1 && i != row - 1) {
-					endDot = dots.get(dotIndex + col);
-					edges.add(new Edge(false, currentDot, endDot));
-					continue;
-				}
-				if (i == row - 1 && j == col - 1) {
-					break;
-				} else {
-					endDot = dots.get(dotIndex + 1);
-					edges.add(new Edge(true, currentDot, endDot));
-					endDot = dots.get(dotIndex + col);
-					edges.add(new Edge(false, currentDot, endDot));
-				}
-			}
-		}
-
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				for (Edge edge : edges) {
-					if (edge.contains(e.getPoint()) && edge.actived == false) {
-						edge.color = edge.color == connectedColor ? edge.color : connectedColor;
-						edge.actived = true;
-						repaint();
-						checkSquare(edge);
-						makeMoveAI();
-						break;
-					}
-				}
-			}
-		});
+	public Matrix(int size) {
+		this.size = size;
+		verticalGap = (heightScreen - offset * 2 - Dot.RADIUS * 2) / (size - 1);
+		horizontalGap = (widthScreen - offset * 2 - Dot.RADIUS * 2) / (size - 1);
 	}
 
-	private void makeMoveAI() {
-		gameinterface.setNamePlayer();
-		System.out.println(edges.toString() + " nguoi choi");
-		newListEdge = control.sendCurrentState(edges);
-
+	public void updateDots(List<Dot> dotList) {
+		this.dots = dotList;
+		repaint();
 	}
 
-	private void checkSquare(Edge edge) {
-		Dot start = edge.start;
-		Dot end = edge.end;
- 		if (edge.isHorizontal) {
-			// Xét ô vuông bên trên
-			Dot topStart = findDotByPoint(new Point(edge.start.getX(), edge.start.getY() - verticalGap));
-			if (topStart != null) {
-				System.out.println("co dot nam tren");
-				Dot topEnd = findDotByPoint(new Point(edge.end.getX(), edge.end.getY() - verticalGap));
-				List<Edge> edgeList = findListEdgeByDots(start, end, topStart, topEnd);
-				boolean hasSquare = true;
-				for (Edge e : edgeList) {
-					if (!e.actived) {
-						System.out.println("Chua tao o vuong");
-						hasSquare = false;
-						break;
-					}
-				}
-				if (hasSquare == true) {
-					System.out.println("Da tao o vuong");
-					Square square = new Square(topStart);
-					squares.add(square);
-					repaint();
-				}
-			} else {
-				System.out.println("Khong co dot ben tren");
-			}
+	public void updateEdges(List<Edge> edgeList) {
+		this.edges = edgeList;
+		repaint();
+	}
 
-			// Xét ô vuông bên dưới
-			Dot bottomStart = findDotByPoint(new Point(edge.start.getX(), edge.start.getY() + verticalGap));
-			if (bottomStart != null) {
-				System.out.println("co dot nam tren");
-				Dot bottomEnd = findDotByPoint(new Point(edge.end.getX(), edge.end.getY() + verticalGap));
-				List<Edge> edgeList = findListEdgeByDots(start, end, bottomStart, bottomEnd);
-				boolean hasSquare = true;
-				for (Edge e : edgeList) {
-					if (!e.actived) {
-						System.out.println("Chua tao o vuong");
-						hasSquare = false;
-						break;
-					}
-				}
-				if (hasSquare == true) {
-					System.out.println("Da tao o vuong");
-					Square square = new Square(start);
-					squares.add(square);
-					repaint();
-				}
-			} else {
-				System.out.println("Khong co dot ben duoi");
-			}
-		}
-
-		// Nếu là cạnh dọc
-		else {
-			// Xét ô vuông bên trái
-			Dot leftStart = findDotByPoint(new Point(edge.start.getX() - horizontalGap, edge.start.getY()));
-			if (leftStart != null) {
-				System.out.println("co dot ben trai");
-				Dot leftEnd = findDotByPoint(new Point(edge.end.getX() - horizontalGap, edge.end.getY()));
-				List<Edge> edgeList = findListEdgeByDots(start, end, leftStart, leftEnd);
-				boolean hasSquare = true;
-				for (Edge e : edgeList) {
-					if (!e.actived) {
-						System.out.println("Chua tao o vuong");
-						hasSquare = false;
-						break;
-					}
-				}
-				if (hasSquare == true) {
-					System.out.println("Da tao o vuong");
-					Square square = new Square(leftStart);
-					squares.add(square);
-					repaint();
-				}
-			} else {
-				System.out.println("Khong co dot ben trai");
-			}
-
-			// Xét ô vuông bên phải
-			Dot rightStart = findDotByPoint(new Point(edge.start.getX() + horizontalGap, edge.start.getY()));
-			if (rightStart != null) {
-				System.out.println("co dot ben trai");
-				Dot rightEnd = findDotByPoint(new Point(edge.end.getX() + horizontalGap, edge.end.getY()));
-				List<Edge> edgeList = findListEdgeByDots(start, end, rightStart, rightEnd);
-				boolean hasSquare = true;
-				for (Edge e : edgeList) {
-					if (!e.actived) {
-						System.out.println("Chua tao o vuong");
-						hasSquare = false;
-						break;
-					}
-				}
-				if (hasSquare == true) {
-					System.out.println("Da tao o vuong");
-					Square square = new Square(start);
-					squares.add(square);
-					repaint();
-				}
-			} else {
-				System.out.println("Khong co dot ben trai");
-			}
-		}
+	public void updateSquares(List<Square> squareList) {
+		this.squares = squareList;
+		repaint();
 	}
 
 	private Dot findDotByPoint(Point p) {
@@ -217,7 +58,8 @@ public class Matrix extends JPanel implements Observer{
 
 	private Edge findEdgeByDots(Dot d1, Dot d2) {
 		for (Edge edge : edges) {
-			if ((edge.start == d1 && edge.end == d2) || (edge.start == d2 && edge.end == d1)) {
+			if ((edge.getStartDot() == d1 && edge.getEndDot() == d2)
+					|| (edge.getStartDot() == d2 && edge.getEndDot() == d1)) {
 				return edge;
 			}
 		}
@@ -247,17 +89,13 @@ public class Matrix extends JPanel implements Observer{
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		for (Square square : squares) {
-			g.setColor(square.color);
-			g.fillRect(square.dot.getX(), square.dot.getY(), square.width, square.height);
+			g.setColor(square.getColor());
+			g.fillRect(square.getDot().getX(), square.getDot().getY(), square.getWidth(), square.getHeight());
 		}
+
 		for (Edge edge : edges) {
-			if ( !edge.actived) {
-				g.setColor(edge.color);
-				edge.draw(g);
-			}else{
-				g.setColor(edge.connectedColor);
-				edge.draw(g);
-			}
+			g.setColor(edge.getCurrentColor());
+			edge.draw(g);
 		}
 
 		g.setColor(Color.BLACK);
@@ -266,11 +104,19 @@ public class Matrix extends JPanel implements Observer{
 		}
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		AI model = (AI) o;
-		this.edges = model.getBestState();
-		System.out.println(edges + "------------may choi");
-		repaint();
+	public int getVerticalGap() {
+		return verticalGap;
+	}
+
+	public int getHorizontalGap() {
+		return horizontalGap;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public List<Square> getSquares() {
+		return this.squares;
 	}
 }

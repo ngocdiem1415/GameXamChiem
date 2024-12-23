@@ -1,86 +1,91 @@
 package model;
 
-import view.Dot;
-import view.Edge;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Node{
-    List<Edge> state;
-    int heuristicState;
+public class Node {
+	List<Edge> state;
+	int heuristic;
+	int aiScore, userScore;
 
-    public Node() {
-    }
+	public Node() {
+	}
 
-    public Node(List<Edge> state) {
-        this.state = state;
-        this.heuristicState =0;
-    }
+	public Node(List<Edge> state) {
+		this.state = state;
+	}
 
-    public List<Node> listChild() {
-        List<Node> listNode = new ArrayList<>();
-        for (int i = 0; i < state.size(); i++) {
-            if ( !state.get(i).isActived()) {
-                List<Edge> newState = new ArrayList<>();
-                for (Edge edge : state) {
-                    newState.add(new Edge(edge));
-                }
-                newState.get(i).setActived(true);
+	public Node(List<Edge> state, int aiScore, int userScore) {
+		this.state = state;
+		this.aiScore = aiScore;
+		this.userScore = userScore;
+		updateHeuristic();
+	}
 
-                Node temp = new Node(newState);
-                listNode.add(temp);
-            }
-        }
-        return listNode;
-    }
+	public boolean isOver() {
+		for (Edge edge : state) {
+			if (!edge.isActivated()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    public boolean isOver() {
-        for (Edge edge : state) {
-            if (!edge.isActived()) {
-                return false;
-            }
-        }
-        return true;
-    }
+	public void increaseAIScore(int point) {
+		this.aiScore += point;
+		updateHeuristic();
+	}
 
-    public List<Edge> getState() {
-        return this.state;
-    }
+	public void increaseUserScore(int point) {
+		this.userScore += point;
+		updateHeuristic();
+	}
 
-    public void setState(List<Edge> state) {
-        this.state = state;
-//        System.out.println(state.toString());
-    }
+	public void updateHeuristic() {
+		this.heuristic = calculateHeuristic();
+	}
 
-    public int getHeuristicState() {
-        return heuristicState;
-    }
+	public int calculateHeuristic() {
+		return this.aiScore - this.userScore;
+	}
 
-    public void setHeuristicState(int heuristicState) {
-        this.heuristicState = heuristicState;
-    }
+	public void setHeuristic(int value) {
+		this.heuristic = value;
+	}
 
-    @Override
-    public String toString() {
-        return "Node{" +
-                "state=" + state +
-                ", heuristicState=" + heuristicState +
-                '}';
-    }
+	public List<Edge> getState() {
+		return this.state;
+	}
 
-    //    public static void main(String[] args) {
-//        List<Edge> list = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            list.add(new Edge());
-//        }
-//        list.get(1).setActived(true);
-//        Node test = new Node(list);
-//        for (Node e:test.listChild()) {
-//            System.out.println(e.getState().toString());
-//            System.out.println("---------------------");
-//        };
-//
-//
-//    }
+	public void setState(List<Edge> state) {
+		this.state = state;
+	}
+
+	public int getHeuristic() {
+		return heuristic;
+	}
+
+	public int getAIScore() {
+		return this.aiScore;
+	}
+
+	public int getUserScore() {
+		return this.userScore;
+	}
+
+	@Override
+	public String toString() {
+		String st = "Node[\n";
+		for (Edge edge : state) {
+			st += edge.toString() + "\n";
+		}
+		st += "]";
+		return st;
+	}
+
+	public void setScore(int aiScore, int userScore) {
+		this.aiScore = aiScore;
+		this.userScore = userScore;
+		updateHeuristic();
+	}
 }

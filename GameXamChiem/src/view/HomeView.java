@@ -1,27 +1,23 @@
 package view;
 
-import cotroller.IController;
-
 import javax.swing.*;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
 
-public class HomePage extends JFrame {
+public class HomeView extends JFrame {
     private JButton btnStart;
-    ImagePanel imagePanel;
     private JPanel titlePN, optionPanel, mainPanel;
-    IController control;
+    private JTextField nameTF;
+    private JComboBox<String> sizeComboBox, levelComboBox;
+    ImagePanel imagePanel;
     JLabel nameLb, lb1;
-    JTextField nameTF;
-    private Observable obs;
+    
+    String userName;
 
-    public HomePage(Observable obs, IController control) throws HeadlessException {
-        this.obs = obs;
-        this.control = control;
-        init();
+    public HomeView() {
+    	init();
     }
 
     private void init() {
@@ -65,18 +61,18 @@ public class HomePage extends JFrame {
         JLabel lb2 = new JLabel("Board Size");
         lb2.setFont(new Font("Arial", Font.BOLD, 20));
         String[] items = {"4x4", "6x6", "8x8"};
-        JComboBox<String> comboBox = new JComboBox<>(items);
-        comboBox.setFont(new Font("Arial", Font.PLAIN, 16));
-        comboBox.setForeground(Color.BLUE);
+        sizeComboBox = new JComboBox<>(items);
+        sizeComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        sizeComboBox.setForeground(Color.BLUE);
 
 //        chon muc do chơi
         // Tạo JComboBox với các lựa chọn
         JLabel lb3 = new JLabel("Level");
         lb3.setFont(new Font("Arial", Font.BOLD, 20));
         String[] item1 = {"Dễ", "Vừa", "Khó"};
-        JComboBox<String> comboBox1 = new JComboBox<>(item1);
-        comboBox1.setFont(new Font("Arial", Font.PLAIN, 16));
-        comboBox1.setForeground(Color.BLUE);
+        levelComboBox = new JComboBox<>(item1);
+        levelComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
+        levelComboBox.setForeground(Color.BLUE);
 
 //        // Start Button
         btnStart = new JButton("Start");
@@ -84,39 +80,13 @@ public class HomePage extends JFrame {
         btnStart.setForeground(Color.WHITE);
         btnStart.setFont(new Font("Arial", Font.BOLD, 20));
         btnStart.setPreferredSize(new Dimension(150, 50));
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nameUser = nameTF.getText().trim().toUpperCase();
-                if (nameUser.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please enter a name before starting!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                    return; // Dừng lại nếu tên trống
-                }
-
-                setVisible(false); // Ẩn frame hiện tại
-                int size = 4;
-                switch (comboBox.getSelectedIndex()) {
-                    case 0:size = 4; break;
-                    case 1:size = 6; break;
-                    case 2:size = 8; break;
-                }
-                int level = 2;
-                switch (comboBox1.getSelectedIndex()) {
-                    case 0:level = 2; break;
-                    case 1:level = 3; break;
-                    case 2:level = 4; break;
-                }
-//                System.out.println(nameUser+ size + level);
-                control.createPlayer(level);
-                new GameInterface(obs,control,nameUser,size, level, 1);
-            }
-        });
+        
         optionPanel.add(nameLb);
         optionPanel.add(nameTF);
         optionPanel.add(lb2);
-        optionPanel.add(comboBox);
+        optionPanel.add(sizeComboBox);
         optionPanel.add(lb3);
-        optionPanel.add(comboBox1);
+        optionPanel.add(levelComboBox);
         optionPanel.add(btnStart);
         mainPanel.add(titlePN, BorderLayout.NORTH);
         mainPanel.add(optionPanel, BorderLayout.CENTER);
@@ -144,5 +114,32 @@ public class HomePage extends JFrame {
             throw new RuntimeException(e);
         }
     }
+    
+    public void showMessage(String message) {
+    	JOptionPane.showMessageDialog(null, message, "Thông báo", JOptionPane.WARNING_MESSAGE);
+    }
 
+	public JButton getBtnStart() {
+		return btnStart;
+	}
+	
+	public JTextField getNameTF() {
+		return nameTF;
+	}
+	
+	public String getUsername() {
+		return userName;
+	}
+	
+	public void setUserName(String name) {
+		userName = name;
+	}
+	
+	public JComboBox<String> getSizeComboBox() {
+		return sizeComboBox;
+	}
+	
+	public JComboBox<String> getLevelComboBox() {
+		return levelComboBox;
+	}
 }
