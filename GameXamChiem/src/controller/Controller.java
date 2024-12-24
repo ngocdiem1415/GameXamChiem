@@ -19,6 +19,11 @@ public class Controller {
 	MainModel model;
 	MainView view;
 
+	LoginView loginView;
+	HomeView homeView;
+	GameView gameView;
+	Matrix matrixPanel;
+
 	public Controller(MainModel model, MainView view) {
 		this.model = model;
 		this.view = view;
@@ -26,121 +31,157 @@ public class Controller {
 	}
 
 	private void init() {
-		LoginView loginView = view.getLoginView();
-		HomeView homeView = view.getHomeView();
+		loginView = view.getLoginView();
+		homeView = view.getHomeView();
 
-		/*
-		 * Ở giao diện LoginView, nếu nhấn nút "Play game" thì view sẽ chuyển sang
-		 * HomeView
-		 */
 		loginView.getBtnPlayGame().addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				view.transformToHomeView();
 			}
 		});
 
-		/*
-		 * Ở giao diện HomeView, nếu nhấn nút "Start" thì đầu tiên kiểm tra tên người
-		 * dùng đã nhập chưa. Nếu chưa sẽ hiển thị ra thông báo. Nếu rồi sẽ lấy ra kích
-		 * thước ma trận và độ khó trò chơi gửi cho model. Cuối cùng, view sẽ chuyển
-		 * sang GameView với điểm của người chơi được khởi tạo là bằng 0
-		 */
 		homeView.getBtnStart().addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// nameTF.getText().trim().toUpperCase()
-				String nameTFText = homeView.getNameTF().getText();
-
-				// Kiểm tra tên người chơi
-				if (nameTFText.equalsIgnoreCase("")) {
+				/*
+				 * 1. Kiểm tra nếu user name để trống thì hiển thị thông báo và không làm gì cả
+				 */
+				String userName = homeView.getNameTF().getText();
+				if (userName.equalsIgnoreCase("")) {
 					homeView.showMessage("Please enter a name before starting!");
-				} else {
-					String userName = nameTFText.trim();
-					homeView.setUserName(userName); // Gán tên người chơi để hiển thị lên giao diện game
+					return;
+				}
 
-					// Lấy ra kích thước ma trận
-					JComboBox<String> sizeComboBox = homeView.getSizeComboBox();
-					int size;
-					switch (sizeComboBox.getSelectedIndex()) {
-					case 0:
-						size = 5;
-						break;
-					case 1:
-						size = 7;
-						break;
-					case 2:
-						size = 9;
-						break;
-					default:
-						size = 5;
-						break;
-					}
+				/*
+				 * 2. Nếu user name hợp lệ thì thực hiện các bước tiếp theo:
+				 * 2.1. Lấy ra user name
+				 * 2.2. Lấy ra size
+				 * 2.3. Lấy ra level
+				 * 2.4. Khởi tạo Game View truyền vào 3 tham số trên
+				 */
+				homeView.setUserName(userName);
+				int size = getSizeFromView();
+				int level = getLevelFromView();
+				view.initGameView(userName, size, level);
+				gameView = view.getGameView();
+				matrixPanel = gameView.getMatrixPanel();
+				
+				/*
+				 * 3. Khởi tạo Model truyền vào tham số size và level để phục vụ xử lý logic với:
+				 * 3.1. Size: Dùng để khởi tạo danh sách Dots, Edges
+				 * 3.2. Level: Dùng phục vụ cho thuật toán minimax
+				 * 3.3. Danh sách Squares cũng sẽ được khởi tạo là một danh sách rỗng
+				 */
+				initModel(size, level);
+				
+				/*
+				 * 4. Sau khi model được khởi tạo thì gửi Dots, Edges, Squares cho Matrix Panel.
+				 * Mục đích: 
+				 * - Matrix Panel sẽ tham chiếu đến các danh sách này
+				 * - Mỗi khi có sự thay đổi Dots, Edges, Squares từ Model, Matrix Panel cũng sẽ thấy được thay đổi đó
+				 */
+				view.updateMatrixPanel(model.getDots(), model.getEdges(), model.getSquares());
+				
+				/*
+				 * 5. Hoàn tất thiết lập mọi thứ thì chạy Game View để chơi game
+				 */
+				view.transformToGameView();
 
-					// Lấy ra độ khó của trò chơi
-					JComboBox<String> levelComboBox = homeView.getLevelComboBox();
-					int level;
-					switch (levelComboBox.getSelectedIndex()) {
-					case 0:
-						level = 2;
-						break;
-					case 1:
-						level = 3;
-						break;
-					case 2:
-						level = 4;
-						break;
-					default:
-						level = 2;
-						break;
-					}
 
-					view.initGameView(userName, size, level);
-					GameView gameView = view.getGameView();
-					Matrix matrixPanel = gameView.getMatrixPanel();
-					model.setOffset(matrixPanel.getOffset());
-					model.setHorizontalGap(matrixPanel.getHorizontalGap());
-					model.setVerticalGap(matrixPanel.getVerticalGap());
-					model.setMatrixSize(size);
-					model.setDepthMinimax(level);
-					view.updateMatrixPanel(model.getDots(), model.getEdges(), model.getSquares());
-					view.transformToGameView();
+				/*
+				 * 6. Thêm sự kiện nếu người chơi nhấp chuột vào Matrix Panel trong lúc chơi
+				 */
+				matrixPanel.addMouseListener(new MouseAdapter() {
+					public void mousePressed(MouseEvent e) {
+						/*
+						 * 6.1. Nếu tọa độ nhấp chuột nằm trong phạm vi của một cạnh thì:
+						 * 6.1.1. Kiểm tra cạnh đó đã kích hoạt hay chưa
+						 * 6.1.2. Nếu chưa kích hoạt thì sẽ gọi Model thực hiện đi cạnh đó
+						 * 6.1.3. Vẽ lại Matrix Panel sau khi cạnh đó được kích hoạt, bao gồm:
+						 * - Vẽ lại cạnh
+						 * - Vẽ lại ô vuông (nếu được tạo)
+						 * - Vẽ lại điểm số
+						 */
+						for (Edge edge : model.getEdges()) {
+							if (edge.contains(e.getPoint()) && edge.isActivated() == false) {
+								model.makeMove(edge);
+								updateView();
+								break;
+							}
+						}
 
-					// Hiển thị lượt chơi và điểm số ban đầu
-					gameView.displayPlayerName(model.getCurrentToken());
-					gameView.displayScore(0, 0);
-
-					// Thêm sự kiện nhấp chuột vào matrix ở GameView (Chỉ có user mới có sự kiện
-					// click chuột)
-					matrixPanel.addMouseListener(new MouseAdapter() {
-						public void mousePressed(MouseEvent e) {
-							for (Edge edge : model.getEdges()) {
-								if (edge.contains(e.getPoint()) && edge.isActivated() == false) {
-									model.makeMove(edge);
-									gameView.displayScore(model.getUserScore(), model.getAIScore());
-									gameView.displayPlayerName(model.getCurrentToken());
-									matrixPanel.updateSquares(model.getSquares());
-									matrixPanel.repaint();
-									if (model.isAITurn()) {
-//										model.runAIMove();
-										while (model.isAITurn()) {
-											model.runAIMove(); // AI thực hiện nước đi
-											gameView.displayScore(model.getUserScore(), model.getAIScore());
-											gameView.displayPlayerName(model.getCurrentToken());
-											matrixPanel.updateSquares(model.getSquares());
-											matrixPanel.repaint();
-										}
-									}
+						/*
+						 * 6.2. Nếu người chơi thực hiện nước đi mà không tạo ô vuông thì lượt tiếp theo là của AI
+						 * 6.2.1. Gọi model thực hiện nước đi cho AI
+						 * 6.2.2. Vẽ lại Matrix Panel
+						 */
+						if (model.isAITurn() == true) {
+							while (true) {
+								model.makeAIMove(); // AI thực hiện nước đi
+								updateView();
+								if (model.isAITurn() == false) {
 									break;
 								}
 							}
-//							System.out.println(matrixPanel.getSquares().size());
-						};
-					});
-				}
+						}
+					};
+				});
 			}
 		});
+	}
+
+	private void updateView() {
+		gameView.displayScore(model.getUserScore(), model.getAIScore());
+		gameView.displayPlayerName(model.getCurrentToken());
+		matrixPanel.repaint();
+	}
+
+	private void initModel(int size, int level) {
+		model.setOffset(matrixPanel.getOffset());
+		model.setHorizontalGap(matrixPanel.getHorizontalGap());
+		model.setVerticalGap(matrixPanel.getVerticalGap());
+		model.setMatrixSize(size);
+		model.setDepthMinimax(level);
+	}
+
+	private int getSizeFromView() {
+		JComboBox<String> sizeComboBox = homeView.getSizeComboBox();
+		int size;
+		switch (sizeComboBox.getSelectedIndex()) {
+		case 0:
+			size = 5;
+			break;
+		case 1:
+			size = 7;
+			break;
+		case 2:
+			size = 9;
+			break;
+		default:
+			size = 5;
+			break;
+		}
+		return size;
+	}
+
+	private int getLevelFromView() {
+		JComboBox<String> levelComboBox = homeView.getLevelComboBox();
+		int level;
+		switch (levelComboBox.getSelectedIndex()) {
+		case 0:
+			level = 2;
+			break;
+		case 1:
+			level = 3;
+			break;
+		case 2:
+			level = 4;
+			break;
+		default:
+			level = 2;
+			break;
+		}
+		return level;
 	}
 }

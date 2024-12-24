@@ -7,18 +7,21 @@ public class Node {
 	List<Edge> state;
 	int heuristic;
 	int aiScore, userScore;
+	boolean hasNewSquare;
 
 	public Node() {
 	}
 
 	public Node(List<Edge> state) {
 		this.state = state;
+		this.hasNewSquare = false;
 	}
 
 	public Node(List<Edge> state, int aiScore, int userScore) {
 		this.state = state;
 		this.aiScore = aiScore;
 		this.userScore = userScore;
+		this.hasNewSquare = false;
 		updateHeuristic();
 	}
 
@@ -87,5 +90,13 @@ public class Node {
 		this.aiScore = aiScore;
 		this.userScore = userScore;
 		updateHeuristic();
+	}
+
+	public boolean isHasNewSquare() {
+		return hasNewSquare;
+	}
+
+	public void setHasNewSquare(boolean hasNewSquare) {
+		this.hasNewSquare = hasNewSquare;
 	}
 }

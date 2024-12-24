@@ -16,14 +16,12 @@ public class GameView extends JFrame {
 	Matrix matrixPanel;
 	String userName;
 	int sizeboard;
-	int level;
 	static int CURRENT_TOKEN;
 	public final static int SIZE = 700;
 
-	public GameView(String userName, int size, int level) {
+	public GameView(String userName, int size) {
 		this.userName = userName;
 		this.sizeboard = size;
-		this.level = level;
 		init();
 	}
 

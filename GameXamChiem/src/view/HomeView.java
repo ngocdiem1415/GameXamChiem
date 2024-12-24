@@ -47,7 +47,7 @@ public class HomeView extends JFrame {
         nameLb.setFont(new Font("Arial", Font.BOLD, 20));
         nameLb.setBounds(50, 232, 409, 44);
 
-        nameTF = new JTextField();
+        nameTF = new JTextField("Player");
         nameTF.setFont(new Font("Arial", Font.BOLD, 20));
         nameTF.setHorizontalAlignment(SwingConstants.LEFT);
         nameTF.setColumns(8);

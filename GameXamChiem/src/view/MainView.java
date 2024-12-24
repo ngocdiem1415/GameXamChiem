@@ -23,7 +23,9 @@ public class MainView {
 	}
 
 	public void initGameView(String userName, int size, int level) {
-		gameView = new GameView(userName, size, level);
+		gameView = new GameView(userName, size);
+		gameView.displayPlayerName(1);
+		gameView.displayScore(0, 0);
 	}
 	
 	public void updateMatrixPanel(List<Dot> dotList, List<Edge> edgeList, List<Square> square) {

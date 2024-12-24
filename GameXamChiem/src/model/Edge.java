@@ -130,9 +130,9 @@ public class Edge {
 		return new Edge(this.isHorizontal, this.startDot, this.endDot, this.isActivated);
 	}
 
-	@Override
-	public String toString() {
-		return "s=d" + MainModel.indexOfDot(startDot) + ", hor = " + isHorizontal + ", act = " + isActivated;
-	}
+//	@Override
+//	public String toString() {
+//		return "s=d" + MainModel.indexOfDot(startDot) + ", hor = " + isHorizontal + ", act = " + isActivated;
+//	}
 
 }
