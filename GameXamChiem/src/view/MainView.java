@@ -6,6 +6,8 @@ import model.Dot;
 import model.Edge;
 import model.Square;
 
+import javax.swing.*;
+
 public class MainView {
 	private LoginView loginView;
 	private HomeView homeView;
@@ -49,5 +51,9 @@ public class MainView {
 
 	public GameView getGameView() {
 		return gameView;
+	}
+
+	public void endGame(int winner) {
+		gameView.endGame(winner);
 	}
 }
